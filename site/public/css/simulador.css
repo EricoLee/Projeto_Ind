@@ -1,0 +1,78 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    background-image: url(../assets2/img_er/Patch_10_23_Notes_Header_v2.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.container {
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+
+/* Começo do "Voltar" */
+
+.header {
+    background-color: transparent;
+    backdrop-filter: blur(8px);
+    height: 82px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+    filter: none;
+}
+
+b {
+    font-size: 10px;
+}
+/* Fim do "Voltar */
+
+/* Começo da calculadora */
+
+.calculadora {
+    width: 80%;
+    height: 587px;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    margin-left: 310px;
+    margin-bottom: 100px;
+    padding: 20px;
+    height: auto;
+    width: 500px;
+    text-align: center;
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+}
+
+h2 {
+    font-size: 40px;
+}
+
+input {
+    /* background-color: transparent; */
+    border: transparent;
+    border-radius: 6px;
+}
+
+button {
+    margin-top: 10px;
+    border: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+span {
+    color: #575757;
+}
+/* Fim da Calculadora */

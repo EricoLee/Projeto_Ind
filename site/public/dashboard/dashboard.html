@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <!-- <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon"> -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="../css/dash.css">
+    <link rel="stylesheet" href="dashboards.css">
+    <script src="../js/funcoes.js"></script>
+    <script src="comandos.js"></script>
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<body>
+
+    <!-- Começo do Header -->
+
+    <body>
+        <div class="janela">
+            <div class="header-left">
+                <h1>Derdnik</h1>
+                <div class="hello">
+                    <h3>Olá<d>, </d>invocador<d>!</d>
+                    </h3>
+                </div>
+                <div class="btn-nav-white">
+                    <a href="../simulador.html">
+                        <h3>Simulador</h3>
+                    </a>
+                </div>
+                <div class="btn-nav-white">
+                    <a href="random.html">
+                        <h3>Wardrobe</h3>
+                    </a>
+                </div>
+                <button onclick="limparSessao()" class="btn-logout">Sair</button>
+            </div>
+        </div>
+        <!-- Fim do Header -->
+
+        <!-- Começo do Gráfico -->
+        <div id="graph">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div id="graph2">
+            <canvas id="myChart2"></canvas>
+        </div>
+
+        <!-- Fim do Graáfico -->
+
+        <!-- Começo dos Itens Míticos -->
+        <div class="dash">
+            <h3>Gráfico Item Mítico</h3>
+            <div class="btns-dash"> <!-- Colocar a cursor: pointer-->
+                <a onclick="item1()"><img src="../assets2/img_er/Trinity_Force_item_HD.webp"></a>
+                <a onclick="item2()"><img src="../assets2/img_er/Galeforce_item_HD.webp"></a>
+                <a onclick="item3()"><img src="../assets2/img_er/Infinity_Edge_item_HD.webp"></a>
+                <a onclick="item4()"><img src="../assets2/img_er/guinsoo.jpg"></a>
+                <a onclick="item5()"><img src="../assets2/img_er/Navori_Quickblades_item_HD.webp"></a>
+            </div>
+
+            <!-- Fim dos Itens Míticos -->
+            <!-- Começo dos Smites -->
+            <h2>Gráfico Popularidade Smites</h2>
+            <div class="votos">
+                <a onclick="votoRed()"><img src="../assets2/img_er/red_smite.webp"></a>
+                <a onclick="votoGreen()"><img src="../assets2/img_er/green_smite.webp"></a>
+                <a onclick="votoBlue()"><img src="../assets2/img_er/blue_smte.webp"></a>
+            </div>
+        </div>
+        <!-- Fim dos Smites -->
+    </body>
+
+</html>
+
+
+<script>
+    window.load = ReceberVotos()
+
+    Ad = sessionStorage.Ad
+    AtkSpd = sessionStorage.AtkSpd
+    Ap = sessionStorage.Ap
+    Hp = sessionStorage.Hp
+    Crit = sessionStorage.Crit
+    Cdr = sessionStorage.Cdr
+
+    function graficoradar() {
+
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'Ad',
+                    'AtkSpd',
+                    'Ap',
+                    'Hp',
+                    'Crit',
+                    'Cdr'
+                ],
+                datasets: [{
+                    label: 'Atributos do Ítem Mítico',
+                    data: [Ad, AtkSpd, Ap, Hp, Crit, Cdr],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)',
+                },
+                ]
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+
+                    }
+                }
+            },
+        }
+        );
+    }
+    window.onload = graficoradar()
+    // b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+    // Começo do gráfico dinâmico
+
+    function ReceberVotos() {
+        // aguardar();
+
+        fetch(`/medidas/tempo-real/`
+        ).then(function (resposta) {
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+
+                    sessionStorage.VOTORED = json[0].voto;
+                    sessionStorage.VOTOBLUE = json[1].voto;
+                    sessionStorage.VOTOGREEN = json[2].voto;
+
+                    GraficoVotos()
+
+                });
+
+            } else {
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    // finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+    function GraficoVotos() {
+        VotoRed = sessionStorage.VOTORED;
+        VotoBlue = sessionStorage.VOTOBLUE;
+        VotoGreen = sessionStorage.VOTOGREEN;
+
+        CriarGrafico()
+    }
+
+    function CriarGrafico() {
+        const ctx2 = document.getElementById('myChart2');
+
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Popularidade do Smite'],
+                datasets: [{
+                    label: 'Smite Vermelho',
+                    data: [sessionStorage.VOTORED],
+                    backgroundColor: '#FF0F00', // Cor do fundo
+                    borderColor: '#000000'
+                },
+                {
+                    label: 'Smite Verde',
+                    data: [sessionStorage.VOTOBLUE],
+                    backgroundColor: '#A1E41F', // Cor do fundo
+                    borderColor: '#000000'
+                },
+                {
+                    label: 'Smite Verde',
+                    data: [sessionStorage.VOTOGREEN],
+                    backgroundColor: '#70F9F4', // Cor do fundo
+                    borderColor: '#000000'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+        });
+    }
+
+    function votoRed() {
+        var Votos1Var = 'red'
+        fetch("/usuarios/cadastrarVoto", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                VotoServer: Votos1Var
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+
+                setTimeout(() => {
+                    window.location = "dashboard.html";
+                }, "500")
+
+                limparFormulario();
+                // finalizarAguardar();
+            } else {
+                throw ("Houve um erro ao tentar realizar o cadastro!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            // finalizarAguardar();
+        });
+
+        return false;
+    }
+
+    function votoBlue() {
+        var Votos2Var = 'blue'
+        fetch("/usuarios/cadastrarVoto", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                VotoServer: Votos2Var
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+
+                setTimeout(() => {
+                    window.location = "dashboard.html";
+                }, "500")
+
+                limparFormulario();
+                // finalizarAguardar();
+            } else {
+                throw ("Houve um erro ao tentar realizar o cadastro!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            // finalizarAguardar();
+        });
+
+        return false;
+    }
+
+    function votoGreen() {
+        var Votos3Var = 'green'
+        fetch("/usuarios/cadastrarVoto", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                VotoServer: Votos3Var
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+
+                setTimeout(() => {
+                    window.location = "dashboard.html";
+                }, "500")
+
+                limparFormulario();
+                // finalizarAguardar();
+            } else {
+                throw ("Houve um erro ao tentar realizar o cadastro!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            // finalizarAguardar();
+        });
+
+        return false;
+    }
+
+    function limparSessao() {
+    // aguardar();
+    sessionStorage.clear();
+    // finalizarAguardar();
+    window.location = "../login.html";
+}
+
+</script>
